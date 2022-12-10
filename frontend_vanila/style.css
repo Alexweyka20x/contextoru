@@ -1,0 +1,35 @@
+/* div {
+    border: 1px solid black;
+} */
+
+body {
+    background-color: #fffbf5
+}
+
+.wrapper {
+    margin   : auto;
+    max-width: 480px;
+    padding  : 15px;
+}
+
+h1 {
+    text-align : center;
+    font-weight: var(--bold-weight);
+    font-family: 'Raleway', sans-serif;
+}
+
+.input-text {
+    width        : 95%;
+    padding      : 10px;
+    font-size    : medium;
+    margin-top   : 30px;
+    margin-bottom: 30px;
+    border-radius: 5px;
+}
+
+.history {
+    background-color: bisque;
+    width           : 100%;
+    height          : 300px;
+
+}

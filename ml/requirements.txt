@@ -1,0 +1,4 @@
+gensim
+tqdm
+pymystem3
+corus
