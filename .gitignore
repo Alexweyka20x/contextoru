@@ -1,6 +1,7 @@
 data
 __pycache__
-*.gz
-*.bz2
-custom_wiki_ru355texts.txt
-./api
+.vscode
+*.w2v
+*.gitignore
+*.ts
+*.js.map

@@ -1,6 +1,6 @@
-/* div {
+* {
     border: 1px solid black;
-} */
+}
 
 body {
     background-color: #fffbf5
@@ -31,5 +31,20 @@ h1 {
     background-color: bisque;
     width           : 100%;
     height          : 300px;
+    font-size       : medium;
+}
 
+.message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 1%;
+    height: 50px;
+}
+
+.bar {
+    position: absolute;
+    border-radius: 5px;
+    height: 25px;
+    min-width: 1%;
 }

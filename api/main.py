@@ -24,9 +24,10 @@ class Guess(BaseModel):
     word: str
 
 
-w2v = KeyedVectors.load_word2vec_format('custom_wiki_ru355texts.txt')
-secret = 'нога'
+w2v = KeyedVectors.load_word2vec_format('wiki_1e8-cleared.w2v')
+secret = 'яблоко'
 vals = w2v.most_similar(secret, topn=100000)
+print(vals[:10])
 d = {k: i+2 for i, (k, v) in enumerate(vals)}
 
 
