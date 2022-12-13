@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var _this = this;
-var el = document.querySelector('.word');
+var el = document.querySelector('.input-text');
 var arr = [];
 function insert_word(word, rating) {
     var pos = 0;
@@ -44,36 +44,6 @@ function insert_word(word, rating) {
     if (pos > 0 && arr[pos - 1][0] == rating)
         return;
     arr.splice(pos, 0, [rating, word]);
-}
-function get_span(s, className) {
-    if (className === void 0) { className = ""; }
-    var res = document.createElement('span');
-    res.textContent = s;
-    res.className = className;
-    return res;
-}
-function get_word_html(word, rating) {
-    var res = document.createElement('div'), outer_bar = document.createElement('div'), inner_bar = document.createElement('div'), row = document.createElement('div');
-    outer_bar.className = "outer-bar";
-    inner_bar.className = "inner-bar";
-    res.className = "row-wrapper";
-    row.className = "row";
-    var perc = 100 - (rating - 1) / 10;
-    if (perc < 1)
-        perc = 1;
-    inner_bar.style.width = perc.toString() + "%";
-    if (rating <= 300)
-        inner_bar.style.backgroundColor = "var(--green)";
-    else if (rating <= 500)
-        inner_bar.style.backgroundColor = "var(--yellow)";
-    else
-        inner_bar.style.backgroundColor = "var(--red)";
-    outer_bar.appendChild(inner_bar);
-    row.appendChild(get_span(word));
-    row.appendChild(get_span(rating.toString()));
-    res.appendChild(outer_bar);
-    res.appendChild(row);
-    return res;
 }
 el.addEventListener('keypress', function (event) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
@@ -90,30 +60,16 @@ el.addEventListener('keypress', function (event) { return __awaiter(_this, void 
                     })
                         .then(function (response) { return response.json(); })
                         .then(function (data) {
-                        var _a, _b;
-                        var message = document.querySelector('.message');
-                        var word = el.value;
-                        if (document.querySelector(".how-to-play")) {
-                            document.querySelector(".how-to-play").remove();
-                        }
-                        message.innerHTML = "";
-                        if (data.error != "ok") {
-                            message.appendChild(get_span("Извините, я не знаю это слово", "message-text"));
+                        if (data.error != "ok")
                             return;
-                        }
-                        insert_word(word, data.rating);
-                        var history = document.querySelector('.guess-history');
+                        insert_word(el.value, data.rating);
+                        console.log(arr);
+                        var history = document.querySelector('.history');
                         history.innerHTML = "";
                         for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
                             var p = arr_1[_i];
-                            history.appendChild(get_word_html(p[1], p[0]));
-                            if (p[1] == word)
-                                (_a = history.lastElementChild) === null || _a === void 0 ? void 0 : _a.classList.add("current");
+                            history.innerHTML += "<p>".concat(p[1], "   ->>>>>   ").concat(p[0], "</p>");
                         }
-                        message.appendChild(get_word_html(word, data.rating));
-                        (_b = message.lastElementChild) === null || _b === void 0 ? void 0 : _b.classList.add("current");
-                        var info = document.querySelector(".info-bar :nth-child(4)");
-                        info.textContent = arr.length.toString();
                     })];
             case 1:
                 _a.sent();
