@@ -1,7 +1,8 @@
+configs
 data
 __pycache__
-config
 .vscode
 *.w2v
 *.gitignore
 *.js.map
+*.tmp

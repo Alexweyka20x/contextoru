@@ -35,9 +35,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var _this = this;
-var el = document.querySelector('.input-text');
-var arr = [];
-function insert_word(word, rating) {
+var input = document.querySelector('.word');
+var dropdown = document.querySelector('.dropdown');
+var message = document.querySelector('.message');
+var arr = [], tips = 0;
+function insert_word_to_list(word, rating) {
     var pos = 0;
     while (pos < arr.length && arr[pos][0] <= rating)
         pos++;
@@ -45,7 +47,56 @@ function insert_word(word, rating) {
         return;
     arr.splice(pos, 0, [rating, word]);
 }
-el.addEventListener('keypress', function (event) { return __awaiter(_this, void 0, void 0, function () {
+function get_span(s, className) {
+    if (className === void 0) { className = ""; }
+    var res = document.createElement('span');
+    res.textContent = s;
+    res.className = className;
+    return res;
+}
+function get_word_html(word, rating) {
+    var res = document.createElement('div'), outer_bar = document.createElement('div'), inner_bar = document.createElement('div'), row = document.createElement('div');
+    outer_bar.className = "outer-bar";
+    inner_bar.className = "inner-bar";
+    res.className = "row-wrapper";
+    row.className = "row";
+    var perc = 100 - (rating - 1) / 2000 * 100;
+    if (perc < 1)
+        perc = 1;
+    inner_bar.style.width = perc.toString() + "%";
+    if (rating <= 500)
+        inner_bar.style.backgroundColor = "var(--green)";
+    else if (rating <= 1500)
+        inner_bar.style.backgroundColor = "var(--yellow)";
+    else
+        inner_bar.style.backgroundColor = "var(--red)";
+    outer_bar.appendChild(inner_bar);
+    row.appendChild(get_span(word));
+    row.appendChild(get_span(rating.toString()));
+    res.appendChild(outer_bar);
+    res.appendChild(row);
+    return res;
+}
+function insert_word(word, rating) {
+    var _a, _b;
+    if (document.querySelector(".how-to-play"))
+        document.querySelector(".how-to-play").remove();
+    message.innerHTML = "";
+    insert_word_to_list(word, rating);
+    var history = document.querySelector('.guess-history');
+    history.innerHTML = "";
+    for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
+        var p = arr_1[_i];
+        history.appendChild(get_word_html(p[1], p[0]));
+        if (p[1] == word)
+            (_a = history.lastElementChild) === null || _a === void 0 ? void 0 : _a.classList.add("current");
+    }
+    message.appendChild(get_word_html(word, rating));
+    (_b = message.lastElementChild) === null || _b === void 0 ? void 0 : _b.classList.add("current");
+    document.querySelector(".info-bar :nth-child(4)").textContent = (arr.length - tips).toString();
+    document.querySelector(".info-bar :nth-child(6)").textContent = tips.toString();
+}
+input.addEventListener('keypress', function (event) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -56,25 +107,68 @@ el.addEventListener('keypress', function (event) { return __awaiter(_this, void 
                             'Accept': 'application/json',
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ word: el.value })
+                        body: JSON.stringify({ word: input.value })
                     })
                         .then(function (response) { return response.json(); })
                         .then(function (data) {
-                        if (data.error != "ok")
+                        if (data.error != "ok") {
+                            message.innerHTML = "";
+                            message.appendChild(get_span("Извините, я не знаю это слово", "message-text"));
                             return;
-                        insert_word(el.value, data.rating);
-                        console.log(arr);
-                        var history = document.querySelector('.history');
-                        history.innerHTML = "";
-                        for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
-                            var p = arr_1[_i];
-                            history.innerHTML += "<p>".concat(p[1], "   ->>>>>   ").concat(p[0], "</p>");
                         }
+                        insert_word(input.value, data.rating);
+                        input.value = "";
                     })];
             case 1:
                 _a.sent();
                 _a.label = 2;
             case 2: return [2 /*return*/];
+        }
+    });
+}); });
+document.querySelector(".btn").addEventListener('click', function (event) { return __awaiter(_this, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        if (dropdown.style.display == "block")
+            dropdown.style.display = "none";
+        else
+            dropdown.style.display = "block";
+        return [2 /*return*/];
+    });
+}); });
+document.querySelector(".tip").addEventListener('click', function (event) { return __awaiter(_this, void 0, void 0, function () {
+    var num, i;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                dropdown.style.display = "none";
+                num = 300, i = 0;
+                if (arr.length > 0 && arr[0][0] <= 2 * num)
+                    num = (arr[0][0] >> 1);
+                if (num <= 1) {
+                    num = 2;
+                    if (arr[i][0] == 1)
+                        num = 1;
+                    for (; i < arr.length && arr[i][0] == num; i++)
+                        num++;
+                    if (i == arr.length)
+                        num = arr[arr.length - 1][0] + 1;
+                }
+                return [4 /*yield*/, fetch('http://localhost:8000/hint', {
+                        method: "POST",
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ number: num })
+                    })
+                        .then(function (response) { return response.json(); })
+                        .then(function (data) {
+                        tips++;
+                        insert_word(data.word, num);
+                    })];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
         }
     });
 }); });

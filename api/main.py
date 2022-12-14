@@ -23,9 +23,12 @@ app.add_middleware(
 class Guess(BaseModel):
     word: str
 
+class Hint(BaseModel):
+    number: int
+
 
 w2v = KeyedVectors.load_word2vec_format('wiki_1e8-cleared.w2v')
-secret = 'яблоко'
+secret = 'карта'
 vals = w2v.most_similar(secret, topn=100000)
 print(vals[:10])
 d = {k: i+2 for i, (k, v) in enumerate(vals)}
@@ -47,3 +50,12 @@ async def check_guess(guess: Guess):
         return {'rating': d[guess.word], 'error': 'ok'}
     print({"error": 'word is not found'})
     return {"error": 'word is not found'}
+
+
+@app.post("/hint")
+async def hint(number: Hint):
+    if number.number == 1:
+        return { 'error': 'this word is secret!' }
+    if number.number > len(vals) + 1:
+        return { 'error': 'i dont know this word' }
+    return { 'word': vals[number.number - 2][0], 'error': 'ok' }
