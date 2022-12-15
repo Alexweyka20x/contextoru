@@ -60,7 +60,7 @@ function get_word_html(word, rating) {
     inner_bar.className = "inner-bar";
     res.className = "row-wrapper";
     row.className = "row";
-    var perc = 100 - (rating - 1) / 2000 * 100;
+    var perc = 100 - (rating - 1) / 4000 * 100;
     if (perc < 1)
         perc = 1;
     inner_bar.style.width = perc.toString() + "%";

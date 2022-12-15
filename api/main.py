@@ -27,9 +27,10 @@ class Hint(BaseModel):
     number: int
 
 
-w2v = KeyedVectors.load_word2vec_format('wiki_1e8-cleared.w2v')
-secret = 'карта'
-vals = w2v.most_similar(secret, topn=100000)
+# w2v = KeyedVectors.load_word2vec_format('all.norm-sz500-w10-cb0-it3-min5-cleared-bin.w2v')
+w2v = KeyedVectors.load_word2vec_format('all.norm-sz500-w10-cb0-it3-min5-cleared-bin.w2v', binary=True, unicode_errors='ignore')
+secret = 'нога'
+vals = w2v.most_similar(secret, topn=1000000)
 print(vals[:10])
 d = {k: i+2 for i, (k, v) in enumerate(vals)}
 
@@ -41,14 +42,10 @@ async def root():
 
 @app.post("/check_guess")
 async def check_guess(guess: Guess):
-    print(guess)
     if guess.word == secret:
-        print({'rating': 1, 'error': 'ok'})
         return {'rating': 1, 'error': 'ok'}
     elif guess.word in d:
-        print({'rating': d[guess.word], 'error': 'ok'})
         return {'rating': d[guess.word], 'error': 'ok'}
-    print({"error": 'word is not found'})
     return {"error": 'word is not found'}
 
 

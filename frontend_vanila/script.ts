@@ -28,7 +28,7 @@ function get_word_html(word: string, rating: number) {
     res.className = "row-wrapper";
     row.className = "row"
     
-    let perc = 100 - (rating - 1) / 2000 * 100;
+    let perc = 100 - (rating - 1) / 4000 * 100;
     if (perc < 1) perc = 1;
 
     inner_bar.style.width = perc.toString() + "%";
